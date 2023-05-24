@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatapp</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script defer src="http://localhost:5500/socket.io/socket.io.js"></script>
+    <script defer src="/js/client.js"></script>
+    
+
+    
+    <style>
+        td:hover{
+            background-color: green;
+            color: white;
+            cursor: pointer;
+        }
+        table{
+            border-collapse: collapse;
+        }
+        tr{
+            border: 1px black;
+        }
+        th{
+            border: 1px black;
+        }
+        .btn2 {
+            margin-left: 70px;
+        }
+    </style>
+</head>
+<body>
+     <br>
+
+     <br>
+     <form>
+        <input type="text" autocomplete="off" name="roomInp" id="roomInp" disabled="true">
+        <button class="btn" id="room-btn" disabled="true">Create Room</button>
+        <button class="btn2" id="logout">Logout</button>
+        <br>
+        <br>
+        <div class="myList">
+        <table id="myTable">
+            <th>
+                Room
+            </th>
+            <tbody>
+            <tr>
+              <td></td>
+              
+            </tr>
+        </tbody>
+          </table>
+        </div>
+    </form>
+
+<script>
+    // take the roomname clicked upon
+  /* $('#myTable').on('click','tr', function(){
+    console.log('you clicked me');
+    rm = $( this ).text()
+    alert( rm );
+    window.location = `http://localhost:5500/view/?name=${rm}`
+});*/
+
+
+
+    // to display the list of rooms
+    window.onload = $.ajax({
+    url: "http://localhost:5500/viewroom",
+    type: 'GET',
+    success: function(res) {
+        let table = document.getElementById("myTable");
+                 for(let i=0;i<res.length;i++){
+                    
+                 let row = table.insertRow(1);
+                 let cell1 = row.insertCell(0);
+                 let cell2 = row.insertCell(1);
+                 let cell3 = row.insertCell(2);
+                 cell1.innerHTML = res[i][0];
+                 cell2.innerHTML = res[i][1];
+                 cell3.innerHTML = res[i][2];}
+    }
+});
+
+   
+
+    // to add the name of the room in the list entered
+
+    $('#room-btn').click (event =>{
+        console.log("its here")
+       // event.preventDefault()
+        let value = $("#roomInp").val()
+        console.log(value)
+        $.ajax({
+            url:"http://localhost:5500/createroom",
+            method:"POST",
+            contentType:"application/json",
+            data: JSON.stringify({room:value}),
+            success: (res)=>{
+                 //const info = JSON.stringify(res)
+                 //console.log(info)
+                 let table = document.getElementById("myTable");
+                 let row = table.insertRow(1);
+                 let cell1 = row.insertCell(0);
+                 cell1.innerHTML = value;
+               console.log(res)
+            }
+        })
+    })
+    
+    // logging out
+    $('#logout').click (event =>{
+        $.ajax({
+    url: "http://localhost:5500/logout",
+    type: 'GET',
+    success: function(res) {
+        console.log('logged out');
+        
+        window.location = `http://localhost:5500/logsuc.html`
+       
+    }
+});
+
+
+    })
+
+</script> 
+</body>
+</html>

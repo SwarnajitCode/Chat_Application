@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Document</title>
+</head>
+<body> 
+    <form  action="login.html"id="reg-form" method="get">
+        <input type="text" id="fname" placeholder="First Name">
+        <br>
+        <br>
+        <input type="text" id="lname" placeholder="Last Name">
+        <br>
+        <br>
+        <input type="text" id="username" placeholder="email">
+        <br>
+        <br>
+        <input type="password" id="password" placeholder="Password">
+        <br>
+        <br>
+        <input type="submit" id ="btn-reg"value="Submit">
+        <br>
+        <br>
+        <a href="login.html">click here to login</a>
+        
+    </form>
+    <script>
+        const form = document.getElementById('reg-form')
+        form.addEventListener('submit', registerUser)
+
+        async function registerUser(event) {
+            const fname = document.getElementById('fname').value
+            const lname = document.getElementById('lname').value
+            const email = document.getElementById('username').value
+            const password = document.getElementById('password').value
+
+            const result = await fetch('http://localhost:5500/register', {
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fname,
+                    lname,
+                    email,
+                    password
+                })
+               
+            }).then(result => result.text()).then(response => {
+                if(response.status == 200){
+                   // document.body.innerHTML = result
+                }
+            })
+            console.log(result)
+        }
+    </script>
+    
+</body>
+</html>
